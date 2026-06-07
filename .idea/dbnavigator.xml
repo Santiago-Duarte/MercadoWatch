@@ -47,6 +47,7 @@
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
     <filter-actions connection-id="7543396e-8d7a-47af-a594-cdb9cf0a69b0" dataset="MercadoWatch.historial_precios" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="7543396e-8d7a-47af-a594-cdb9cf0a69b0" dataset="MercadoWatch.productos" active-filter-id="EMPTY_FILTER" />
   </component>
   <component name="DBNavigator.Project.ObjectQuickFilterManager">
     <last-used-operator value="EQUAL" />
