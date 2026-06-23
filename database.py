@@ -102,3 +102,33 @@ def ver_historial(url):
     finally:
         conexion.close()
 
+
+def obtener_ultimo_precio(url):
+    """Busca el último precio registrado de un producto antes de guardar el nuevo."""
+    conexion = sqlite3.connect(DB_NAME, timeout=10)
+    cursor = conexion.cursor()
+    cursor.execute("PRAGMA foreign_keys = ON;")
+
+    try:
+        # Traemos SOLO el precio, no gastamos recursos con SELECT *
+        cursor.execute('''
+            SELECT h.precio 
+            FROM historial_precios h
+            JOIN productos p ON h.producto_id = p.id
+            WHERE p.url = ?
+            ORDER BY h.fecha DESC
+            LIMIT 1
+        ''', (url,))
+
+        resultado = cursor.fetchone()
+
+        # Caso límite: Si el producto es nuevo, no habrá historial previo
+        if resultado:
+            return resultado[0]  # Retorna el precio puro (int)
+        return None  # Indica que es el primer registro del producto
+
+    except Exception as e:
+        print(f"Error al obtener el último precio: {e}")
+        return None
+    finally:
+        conexion.close()
