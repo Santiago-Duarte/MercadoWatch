@@ -1,5 +1,5 @@
 from scraper import extraer_datos_alkosto
-from database import inicializar_base_datos, registrar_precio_producto, obtener_ultimo_precio
+from database import *
 import time
 from random import randint, choice
 
@@ -29,6 +29,8 @@ if __name__ == "__main__":
 
         # Consultamos el último precio en la BD ANTES de registrar el nuevo
         precio_anterior = obtener_ultimo_precio(enlace)
+        # Consultamos el precio mínimo histórico
+        precio_minimo = obtener_minimo_historico(enlace)
 
         if precio_anterior is not None:
             variacion_de_precio = ((precio - precio_anterior) / precio_anterior) * 100
@@ -45,6 +47,22 @@ if __name__ == "__main__":
                 print("⚪ El precio se mantiene estable sin variaciones.")
         else:
             print("ℹ️ Primer registro de este producto. Monitoreo activado.")
+
+        # 3. EVALUACIÓN DE MÍNIMO HISTÓRICO (Lógica de ofertas reales)
+        # Protegemos el flujo contra None si el producto es nuevo
+        if precio_minimo is not None:
+            if precio < precio_minimo:
+                print(f"{VERDE}🔥 [¡NUEVO MÍNIMO HISTÓRICO DETECTADO!]")
+                print(
+                    f"¡El precio de {nombre} ha roto su piso de mercado! Nuevo récord: ${precio} (Mínimo anterior: ${precio_minimo}){RESET}")
+                # Aquí se conectará la función de Telegram más adelante
+            elif precio == precio_minimo:
+                print(f"{VERDE}🟢 [PRECIO EN MINIMO HISTÓRICO]")
+                print(f"El precio iguala la mejor oferta registrada: ${precio}{RESET}")
+            else:
+                print(f"Nota: El precio actual está por encima del mínimo histórico (${precio_minimo}).")
+        else:
+            print("ℹ️ Estableciendo el precio actual como el mínimo histórico inicial.")
 
         # Guardamos el registro de forma persistente en SQLite
         registrar_precio_producto(enlace, nombre, precio)

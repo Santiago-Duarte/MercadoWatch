@@ -132,3 +132,28 @@ def obtener_ultimo_precio(url):
         return None
     finally:
         conexion.close()
+
+def obtener_minimo_historico(url):
+    conexion = sqlite3.connect(DB_NAME, timeout=10)
+    cursor = conexion.cursor()
+    cursor.execute("PRAGMA foreign_keys = ON;")
+
+    try:
+        cursor.execute('''
+            SELECT MIN(h.precio)
+            FROM historial_precios h
+            JOIN productos p ON h.producto_id = p.id
+            WHERE p.url = ?
+        ''', (url,))
+
+        resultado = cursor.fetchone()
+
+        if resultado and resultado[0] is not None:
+            return resultado[0]  # Retorna el precio puro (int)
+        return None  # Indica que es el primer registro del producto
+
+    except Exception as e:
+        print(f"Error al obtener el minimo historico: {e}")
+        return None
+    finally:
+        conexion.close()

@@ -38,6 +38,7 @@
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
     <open-files>
+      <object connection-id="7543396e-8d7a-47af-a594-cdb9cf0a69b0" object-ref="schemas/MercadoWatch/tables/productos" />
       <object connection-id="7543396e-8d7a-47af-a594-cdb9cf0a69b0" object-ref="schemas/MercadoWatch/tables/historial_precios" />
     </open-files>
   </component>
