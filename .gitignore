@@ -1,0 +1,5 @@
+# .gitignore
+.env
+mercadowatch.db
+__pycache__/
+*.pyc
