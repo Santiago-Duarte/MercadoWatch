@@ -1,17 +1,17 @@
+# database.py
+import os
 import sqlite3
+from dotenv import load_dotenv
 
-DB_NAME = "mercadowatch.db"
-
+load_dotenv()
+DB_NAME = os.getenv("DB_NAME", "mercadowatch.db")
 
 def inicializar_base_datos():
-    """Crea el archivo de la base de datos y las tablas si no existen."""
+    """Crea el archivo de la base de datos, las tablas y los índices si no existen."""
     conexion = sqlite3.connect(DB_NAME, timeout=10)
     cursor = conexion.cursor()
-
-    # Activar el soporte para llaves foráneas (relaciones entre tablas)
     cursor.execute("PRAGMA foreign_keys = ON;")
 
-    # 1. Crear tabla de productos
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS productos (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -20,7 +20,6 @@ def inicializar_base_datos():
         )
     ''')
 
-    # 2. Crear tabla de historial de precios
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS historial_precios (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -31,9 +30,15 @@ def inicializar_base_datos():
         )
     ''')
 
+    # Índice compuesto para optimizar búsquedas por producto ordenadas por fecha
+    cursor.execute('''
+        CREATE INDEX IF NOT EXISTS idx_historial_producto_fecha 
+        ON historial_precios (producto_id, fecha DESC);
+    ''')
+
     conexion.commit()
     conexion.close()
-    print("¡Base de datos e intérprete de comandos listos!")
+    print("¡Base de datos e índices listos!")
 
 
 def registrar_precio_producto(url, nombre, precio):
