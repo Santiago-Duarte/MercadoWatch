@@ -64,9 +64,9 @@ def ejecutar_ciclo_monitoreo():
 
             registrar_precio_producto(enlace, nombre, precio)
 
-            # Polite anti-blocking delay
+            # Polite anti-blocking delay (Simulación de comportamiento humano)
             if i < len(enlaces) - 1:
-                espera = randint(10, 15)
+                espera = randint(15, 30) if i % 2 == 0 else randint(5, 12)
                 print(f"Esperando {espera} segundos para la siguiente petición...")
                 time.sleep(espera)
 
