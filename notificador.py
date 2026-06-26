@@ -44,6 +44,3 @@ def enviar_alerta_telegram(producto, precio_anterior, precio_nuevo, url):
             print(f"⚠️ Telegram respondió con código {respuesta.status_code}: {respuesta.text}")
     except requests.exceptions.RequestException as e:
         print(f"❌ Error de red al conectar con Telegram: {e}")
-
-if __name__ == "__main__":
-    enviar_alerta_telegram("Producto de Prueba", 1500000, 1200000, "https://www.alkosto.com")
